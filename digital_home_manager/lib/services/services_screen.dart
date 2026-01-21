@@ -84,66 +84,133 @@ class _ServicesScreenState extends State<ServicesScreen> {
         }
         final providers = provSnap.data!;
         return Scaffold(
-          floatingActionButton: FloatingActionButton(
-            onPressed: _booking
-                ? null
-                : () {
-                    _showBookDialog(providers);
-                  },
-            tooltip: 'Book Service',
-            child: _booking ? const CircularProgressIndicator() : const Icon(Icons.add_business),
+          floatingActionButton: FloatingActionButton.extended(
+            onPressed: _booking ? null : () => _showBookDialog(providers),
+            icon: _booking
+                ? const CircularProgressIndicator()
+                : const Icon(Icons.handyman),
+            label: const Text("Book Service"),
+            backgroundColor: Colors.purple,
           ),
-          body: StreamBuilder<List<ServiceJob>>(
-            stream: ServicesService.jobsStream(),
-            builder: (context, jobSnap) {
-              if (!jobSnap.hasData) {
-                return const Center(child: CircularProgressIndicator());
-              }
-              final jobs = jobSnap.data!;
-              return ListView(
-                padding: const EdgeInsets.all(24),
-                children: [
-                  Text('Book Household Services', style: Theme.of(context).textTheme.headlineMedium),
-                  const SizedBox(height: 18),
-                  if (jobs.isEmpty)
-                    const Text("No current or past service jobs. Use '+' to book!"),
-                  ...jobs.map((job) => Card(
-                        color: job.status == 'completed'
-                            ? Colors.green[50]
-                            : Colors.yellow[50],
-                        child: ListTile(
-                          leading: Icon(
-                            job.status == 'completed'
-                                ? Icons.check_circle
-                                : Icons.build,
-                            color: job.status == 'completed'
-                                ? Colors.green
-                                : Colors.amber,
-                          ),
-                          title: Text(job.label),
-                          subtitle: Text("By: ${job.providerName}\n${job.created.toLocal().toString().split(' ')[0]}"),
-                          trailing: job.status == 'pending'
-                              ? ElevatedButton.icon(
-                                  icon: const Icon(Icons.done),
-                                  label: const Text('Mark Complete'),
-                                  onPressed: () => ServicesService.completeJob(job.id),
+          body: Container(
+            color: Colors.grey[100],
+            child: ListView(
+              padding: EdgeInsets.zero,
+              children: [
+                Container(
+                  alignment: Alignment.centerLeft,
+                  padding: const EdgeInsets.fromLTRB(22, 18, 22, 8),
+                  child: Row(
+                    children: [
+                      const Icon(Icons.handyman, color: Colors.purple, size: 32),
+                      const SizedBox(width: 10),
+                      Text(
+                        'Services & History',
+                        style: Theme.of(context).textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.bold),
+                      ),
+                    ],
+                  ),
+                ),
+                Expanded(
+                  child: StreamBuilder<List<ServiceJob>>(
+                    stream: ServicesService.jobsStream(),
+                    builder: (context, jobSnap) {
+                      if (!jobSnap.hasData) {
+                        return const Center(child: CircularProgressIndicator());
+                      }
+                      final jobs = jobSnap.data!;
+                      return Card(
+                        margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                        child: Padding(
+                          padding: const EdgeInsets.all(12),
+                          child: jobs.isEmpty
+                              ? Center(
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: const [
+                                      Icon(Icons.history, size: 44, color: Colors.purple),
+                                      SizedBox(height: 13),
+                                      Text("No booked services yet. Tap 'Book Service' to request help.", textAlign: TextAlign.center),
+                                    ],
+                                  ),
                                 )
-                              : null,
+                              : ListView.separated(
+                                  shrinkWrap: true,
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  itemCount: jobs.length,
+                                  separatorBuilder: (_, __) => const Divider(height: 18),
+                                  itemBuilder: (context, i) {
+                                    final job = jobs[i];
+                                    return ListTile(
+                                      leading: CircleAvatar(
+                                        backgroundColor: job.status == 'completed' ? Colors.green[100] : Colors.purple[50],
+                                        foregroundColor: job.status == 'completed' ? Colors.green[900] : Colors.purple[900],
+                                        child: Icon(
+                                          job.status == 'completed'
+                                              ? Icons.check_circle
+                                              : Icons.miscellaneous_services,
+                                          size: 22,
+                                        ),
+                                      ),
+                                      title: Text(
+                                        job.label,
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.w600,
+                                            color: job.status == 'completed' ? Colors.green[900] : Colors.purple[900]),
+                                      ),
+                                      subtitle: Text(
+                                        "By: ${job.providerName}\n${job.created.toLocal().toString().split(' ')[0]}",
+                                        style: const TextStyle(fontSize: 13, color: Colors.black54),
+                                      ),
+                                      trailing: job.status == 'pending'
+                                          ? ElevatedButton.icon(
+                                              icon: const Icon(Icons.done),
+                                              label: const Text('Complete'),
+                                              onPressed: () => ServicesService.completeJob(job.id),
+                                              style: ElevatedButton.styleFrom(
+                                                backgroundColor: Colors.green,
+                                                foregroundColor: Colors.white,
+                                                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 9),
+                                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                                              ),
+                                            )
+                                          : const Icon(Icons.verified, color: Colors.green),
+                                    );
+                                  },
+                                ),
                         ),
-                      )),
-                  const SizedBox(height: 18),
-                  Text('Available Providers', style: Theme.of(context).textTheme.titleLarge),
-                  ...providers.map((p) => Card(
-                        color: Colors.purple[25],
-                        child: ListTile(
-                          leading: const Icon(Icons.business_center, color: Colors.deepPurple),
-                          title: Text('${p.name} — ${p.specialty}'),
-                          subtitle: Text('Phone: ${p.phone}\nEmail: ${p.email}'),
-                        ),
-                      )),
-                ],
-              );
-            },
+                      );
+                    },
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
+                  child: Card(
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 16),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text('Verified Providers',
+                              style: Theme.of(context).textTheme.titleLarge?.copyWith(color: Colors.deepPurple)),
+                          const SizedBox(height: 10),
+                          ...providers.map((p) => ListTile(
+                                leading: Icon(Icons.business_center, color: Colors.deepPurple[800], size: 28),
+                                title: Text('${p.name} — ${p.specialty}',
+                                    style: const TextStyle(fontWeight: FontWeight.bold)),
+                                subtitle: Text('Phone: ${p.phone}\nEmail: ${p.email}', style: const TextStyle(fontSize: 13)),
+                                contentPadding: const EdgeInsets.symmetric(vertical: 3, horizontal: 5),
+                              )),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         );
       },

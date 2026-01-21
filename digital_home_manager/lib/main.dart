@@ -9,6 +9,7 @@ import 'documents/documents_screen.dart';
 import 'health/health_screen.dart';
 import 'home_card/home_card_screen.dart';
 import 'notifications/notification_service.dart';
+import 'onboarding/onboarding_screen.dart';
 import 'services/services_screen.dart';
 import 'subscription/subscription_screen.dart';
 
@@ -22,7 +23,26 @@ void main() async {
 
   // The debug token must be copied from the log output when the app runs in debug provider mode.
   await NotificationService.initialize();
-  runApp(const DigitalHomeManagerApp());
+  runApp(const AppWithOnboarding());
+}
+
+class AppWithOnboarding extends StatefulWidget {
+  const AppWithOnboarding({super.key});
+  @override
+  State<AppWithOnboarding> createState() => _AppWithOnboardingState();
+}
+class _AppWithOnboardingState extends State<AppWithOnboarding> {
+  bool _showOnboarding = true;
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'Digital Home Manager',
+      home: _showOnboarding
+          ? OnboardingScreen(onFinish: () => setState(() => _showOnboarding = false))
+          : const DigitalHomeManagerApp(),
+    );
+  }
 }
 
 class DigitalHomeManagerApp extends StatelessWidget {

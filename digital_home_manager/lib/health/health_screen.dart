@@ -38,43 +38,107 @@ class _HealthScreenState extends State<HealthScreen> {
             return const Center(child: CircularProgressIndicator());
           }
           final analytics = snapshot.data!;
-          return ListView(
-            padding: const EdgeInsets.all(24.0),
-            children: [
-              Text('Home Health Overview', style: Theme.of(context).textTheme.headlineMedium),
-              const SizedBox(height: 24),
-              if (analytics.risks.isNotEmpty) ...[
-                _tile('Risks & Alerts', analytics.risks, color: Colors.red),
+          return Container(
+            color: Colors.grey[100],
+            child: ListView(
+              padding: const EdgeInsets.fromLTRB(18, 16, 18, 16),
+              children: [
+                Row(
+                  children: [
+                    const Icon(Icons.health_and_safety, color: Colors.green, size: 32,),
+                    const SizedBox(width: 10),
+                    Text('Home Health Analytics', style: Theme.of(context).textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.bold)),
+                  ],
+                ),
+                const SizedBox(height: 14),
+                Card(
+                  margin: EdgeInsets.zero,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(16, 19, 16, 12),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text("Summary", style: Theme.of(context).textTheme.titleLarge),
+                        const SizedBox(height: 10),
+                        Row(
+                          children: [
+                            _chip(
+                              label: "Overdue: ${analytics.overdueCount}",
+                              color: analytics.overdueCount > 0 ? Colors.red : Colors.grey[300]!,
+                            ),
+                            const SizedBox(width: 6),
+                            _chip(
+                              label: "Upcoming: ${analytics.upcomingCount}",
+                              color: analytics.upcomingCount > 0 ? Colors.orange : Colors.grey[300]!,
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
                 const SizedBox(height: 12),
-              ],
-              if (analytics.recommendations.isNotEmpty) ...[
-                _tile('Recommendations', analytics.recommendations, color: Colors.green),
+                if (analytics.risks.isNotEmpty)
+                  Card(
+                    color: Colors.red[50],
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+                    child: Padding(
+                      padding: const EdgeInsets.all(15),
+                      child: _tile('Risks & Alerts', analytics.risks, color: Colors.red),
+                    ),
+                  ),
+                if (analytics.recommendations.isNotEmpty)
+                  Card(
+                    color: Colors.green[50],
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+                    child: Padding(
+                      padding: const EdgeInsets.all(15),
+                      child: _tile('Recommendations', analytics.recommendations, color: Colors.green),
+                    ),
+                  ),
+                Card(
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+                  child: Padding(
+                    padding: const EdgeInsets.all(15),
+                    child: _tile(
+                      'Service & Check History',
+                      analytics.history,
+                      color: Colors.blueGrey,
+                    ),
+                  ),
+                ),
                 const SizedBox(height: 12),
+                Align(
+                  alignment: Alignment.center,
+                  child: ElevatedButton.icon(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.green,
+                      foregroundColor: Colors.white,
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                    ),
+                    icon: const Icon(Icons.refresh),
+                    label: const Text('Re-analyze health'),
+                    onPressed: _refresh,
+                  ),
+                ),
               ],
-              _tile(
-                'Overview',
-                [
-                  if (analytics.overdueCount > 0)
-                    '${analytics.overdueCount} overdue inspections/services',
-                  if (analytics.upcomingCount > 0)
-                    '${analytics.upcomingCount} upcoming due within 30 days',
-                  if (analytics.overdueCount + analytics.upcomingCount == 0)
-                    'All checked, up to date!',
-                ],
-                color: Colors.blue,
-              ),
-              const SizedBox(height: 12),
-              _tile('History', analytics.history, color: Colors.grey),
-              const SizedBox(height: 12),
-              ElevatedButton.icon(
-                icon: const Icon(Icons.refresh),
-                label: const Text('Re-analyze health'),
-                onPressed: _refresh,
-              ),
-            ],
+            ),
           );
         },
       ),
+    );
+  }
+
+  Widget _chip({required String label, required Color color}) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      decoration: BoxDecoration(
+        color: color.withOpacity(0.15),
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(width: 1, color: color),
+      ),
+      child: Text(label, style: TextStyle(color: color, fontWeight: FontWeight.bold, fontSize: 14)),
     );
   }
 
