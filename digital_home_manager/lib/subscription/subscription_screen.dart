@@ -40,7 +40,6 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Subscription')),
       body: _loading
           ? const Center(child: CircularProgressIndicator())
           : Container(
@@ -51,8 +50,18 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Icon(Icons.workspace_premium, size: 52, color: Colors.amber),
-                      const SizedBox(height: 22),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 16, right: 16, top: 16),
+                        child: Row(
+                          children: [
+                            const Icon(Icons.workspace_premium, color: Colors.amber, size: 36),
+                            const SizedBox(width: 12),
+                            Text('Subscription',
+                                style: Theme.of(context).textTheme.headlineLarge?.copyWith(fontWeight: FontWeight.bold)),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 12),
                       if (_subscribed)
                         const Card(
                           color: Colors.greenAccent,

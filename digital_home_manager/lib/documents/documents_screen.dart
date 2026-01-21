@@ -77,20 +77,22 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
         color: Colors.grey[100],
         child: Column(
           children: [
+            const SizedBox(height: 18),
             Container(
               alignment: Alignment.centerLeft,
-              padding: const EdgeInsets.fromLTRB(22, 18, 22, 8),
+              padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
               child: Row(
                 children: [
                   const Icon(Icons.description, color: Colors.teal, size: 32),
                   const SizedBox(width: 10),
                   Text(
                     'Documents & Archive',
-                    style: Theme.of(context).textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.bold),
+                    style: Theme.of(context).textTheme.headlineLarge?.copyWith(fontWeight: FontWeight.bold),
                   ),
                 ],
               ),
             ),
+            const SizedBox(height: 12),
             Expanded(
               child: Card(
                 margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),

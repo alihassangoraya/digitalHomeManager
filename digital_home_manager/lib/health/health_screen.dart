@@ -41,16 +41,17 @@ class _HealthScreenState extends State<HealthScreen> {
           return Container(
             color: Colors.grey[100],
             child: ListView(
-              padding: const EdgeInsets.fromLTRB(18, 16, 18, 16),
+              padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
               children: [
+                const SizedBox(height: 18),
                 Row(
                   children: [
                     const Icon(Icons.health_and_safety, color: Colors.green, size: 32,),
                     const SizedBox(width: 10),
-                    Text('Home Health Analytics', style: Theme.of(context).textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.bold)),
+                    Text('Home Health Analytics', style: Theme.of(context).textTheme.headlineLarge?.copyWith(fontWeight: FontWeight.bold)),
                   ],
                 ),
-                const SizedBox(height: 14),
+                const SizedBox(height: 12),
                 Card(
                   margin: EdgeInsets.zero,
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),

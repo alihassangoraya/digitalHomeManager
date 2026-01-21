@@ -100,20 +100,37 @@ class _MainNavigationState extends State<MainNavigation> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(_navItems[_selectedIndex].label!),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.logout),
-            tooltip: 'Sign Out',
-            onPressed: () async {
-              await FirebaseAuth.instance.signOut();
-            },
-          ),
+      extendBody: true,
+      body: Stack(
+        children: [
+          if (_selectedIndex == 0)
+            Column(
+              children: [
+                Expanded(child: _pages[0]),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 18),
+                  child: SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton.icon(
+                      onPressed: () async {
+                        await FirebaseAuth.instance.signOut();
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.redAccent,
+                        foregroundColor: Colors.white,
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                      ),
+                      icon: const Icon(Icons.logout),
+                      label: const Text('Sign Out', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17)),
+                    ),
+                  ),
+                ),
+              ],
+            )
+          else
+            _pages[_selectedIndex],
         ],
-      ),
-      body: Center(
-        child: _pages[_selectedIndex],
       ),
       bottomNavigationBar: BottomNavigationBar(
         items: _navItems,
