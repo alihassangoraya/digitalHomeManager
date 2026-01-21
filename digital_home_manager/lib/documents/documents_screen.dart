@@ -77,7 +77,7 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
         color: Colors.grey[100],
         child: Column(
           children: [
-            const SizedBox(height: 18),
+            const SizedBox(height: 20),
             Container(
               alignment: Alignment.centerLeft,
               padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),

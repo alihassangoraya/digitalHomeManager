@@ -43,7 +43,7 @@ class _HealthScreenState extends State<HealthScreen> {
             child: ListView(
               padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
               children: [
-                const SizedBox(height: 18),
+                const SizedBox(height: 20),
                 Row(
                   children: [
                     const Icon(Icons.health_and_safety, color: Colors.green, size: 32,),

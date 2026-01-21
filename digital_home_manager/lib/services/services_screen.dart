@@ -97,7 +97,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
             child: ListView(
               padding: EdgeInsets.zero,
               children: [
-                const SizedBox(height: 18),
+                const SizedBox(height: 20),
                 Container(
                   alignment: Alignment.centerLeft,
                   padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),

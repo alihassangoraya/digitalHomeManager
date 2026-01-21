@@ -162,7 +162,7 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
                             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                           ),
                         ),
-                        const SizedBox(height: 18),
+                        const SizedBox(height: 20),
                         const Text(
                           "All premium features activate instantly after purchase.",
                           textAlign: TextAlign.center,
