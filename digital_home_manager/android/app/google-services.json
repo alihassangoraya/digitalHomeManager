@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "965059439991",
+    "project_id": "digitalhomemanager",
+    "storage_bucket": "digitalhomemanager.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:965059439991:android:2c541868154c24a57d8572",
+        "android_client_info": {
+          "package_name": "com.example.digital_home_manager"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBgVsa-x0mHTNMBZ7CLj-q_hUBDT3UQLEU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
